@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-color: #d9d9d9;
+}
+
+@layer components {
+    .fit-dropdown.active {
+        display: none;
+    }
+
+    .arrow-img.active {
+        transform: rotate(180deg);
+    }
+}
