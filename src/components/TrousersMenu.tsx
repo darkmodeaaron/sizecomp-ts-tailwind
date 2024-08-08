@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 
 import downArrow from "../assets/downArrow.png"
 
@@ -6,45 +6,77 @@ import "../style/index.css"
 
 const TrousersMenu = () => {
 
-    const [selectedData, setSelectedData] = useState({})
-    const [sizedata, setSizeData] = useState("")
-    const [selectedFit, setSelectedFit] = useState("Select fit")
-
+    const [selectedFitData, setSelectedData] = useState <TrouserFit> (placeholder)
     const [fitDropdownState, setFitDropdownState] = useState(false)
+    const [widthSelectedData, setWidthSelectedData] = useState("")
+    const [lengthSelectedData, setLengthSelectedData] = useState("")
+    const [selectedSize, setSelectedSize] = useState(widthSelectedData + lengthSelectedData)
 
+    useEffect(() => {
+        console.log(selectedSize)
+    }, [selectedSize])
+
+    
+    // selects the fits from the dropdown menu, assigns selectedData and toggles dropdown 
     function selectFit(chosenFit: TrouserFit) {
         setSelectedData(chosenFit)
-        setSelectedFit(chosenFit.fit)
         toggleFitDropdown()
     }
 
+    // dropdown toggle function
     function toggleFitDropdown() {
         setFitDropdownState(!fitDropdownState)
     }
 
+    function selectWidth(selectedWidth: string) {
+        setWidthSelectedData(selectedWidth)
 
-  return (
-    <section className="trousers-men">
-        <div className="menu-left">
-            <SelectFitDropdown selectFitFunc={selectFit} fitDropdownToggle={toggleFitDropdown} selectedFitData={selectedFit} fitddState={fitDropdownState}/>
-        </div>
-    </section>
-  )
+        setSelectedSize(widthSelectedData + lengthSelectedData)
+
+    }    
+
+    function selectLength(selectedLength: string) {
+        setLengthSelectedData(selectedLength)
+
+        setSelectedSize(widthSelectedData + lengthSelectedData)
+
+    }    
+
+    return (
+        <section className="trousers-menu border-1 border-black flex flex-row mx-auto h-96">
+            <div className="menu-left border-2 border-blue-700 flex flex-col gap-12 relative px-2 py-5">
+                <SelectFitDropdown selectFitFunction={selectFit} fitDropdownToggleFunction={toggleFitDropdown} selectedData={selectedFitData} propFitDropdownState={fitDropdownState}/>
+                <FitDescription propSelectedFitData={selectedFitData}/>
+                <SizeSelectors selectWidthFunction={selectWidth} selectLengthFunction={selectLength}/>
+            </div>
+            <div className="menu-right border-2 border-red-500 flex-1.5">
+                <Image />
+            </div>
+        </section>
+    )
 }
 
-const SelectFitDropdown: React.FC<SelectFitDropdownProps> = ({fitDropdownToggle, selectedFitData, selectFitFunc, fitddState}) => {
+
+type SelectFitDropdownProps = {
+    fitDropdownToggleFunction: () => void;
+    selectedData: TrouserFit;
+    selectFitFunction: (fit: TrouserFit) => void;
+    propFitDropdownState: boolean;
+}
+
+const SelectFitDropdown: React.FC<SelectFitDropdownProps> = ({fitDropdownToggleFunction, selectedData, selectFitFunction, propFitDropdownState}) => {
     return (
-        <div className="fit-selector w-44">
+        <div className="fit-selector w-44 ">
             <div className="px-1 flex items-center justify-between border-2 border-black">
-                <h1 className="selected-fit" onClick={() => fitDropdownToggle()}>{selectedFitData}</h1>
-                <div className="arrow-container w-3" onClick={() => fitDropdownToggle()}>
-                    <img className={`arrow-img transitions-all duration-300 ease-in-out cursor-pointer ${fitddState ? 'active' : ''}`} src={downArrow} alt="" />
+                <h1 className="selected-fit cursor-pointer" onClick={() => fitDropdownToggleFunction()}>{selectedData.fit}</h1>
+                <div className="arrow-container w-3" onClick={() => fitDropdownToggleFunction()}>
+                    <img className={`arrow-img transitions-all duration-300 ease-in-out cursor-pointer ${propFitDropdownState ? 'active' : ''}`} src={downArrow} alt="" />
                 </div>
             </div>
-            <div className={`fit-dropdown ${fitddState ? "" : "active"}`}>
+            <div className={`fit-dropdown h-0 overflow-hidden transitions-all duration-300 ease-in-out border-2 border-t-0 border-black px-1 absolute w-44 ${propFitDropdownState ? "active" : ""}`}>
                 {trouserData.map((trouser, index) => {
-                    return <div key={index} onClick={() => selectFitFunc(trouser)}>
-                        <h1 >{trouser.fit}</h1>
+                    return <div key={index} onClick={() => selectFitFunction(trouser)}>
+                        <h1 className="cursor-pointer">{trouser.fit}</h1>
                     </div>
                 })}
             </div>
@@ -52,14 +84,53 @@ const SelectFitDropdown: React.FC<SelectFitDropdownProps> = ({fitDropdownToggle,
     )
 }
 
-// data
+type FitDescriptionProps = {
+    propSelectedFitData: TrouserFit;
+};
 
-type SelectFitDropdownProps = {
-    fitDropdownToggle: () => void;
-    selectedFitData: string;
-    selectFitFunc: (fit: TrouserFit) => void;
-    fitddState: boolean;
-  };
+const FitDescription: React.FC<FitDescriptionProps> = ({propSelectedFitData}) => {
+    return (
+        <div className="fit-description border-1 border-green-700 mt-7">
+            <h1>{propSelectedFitData.description}</h1>
+        </div>
+    )
+}
+
+type SizeSelectorsProps = {
+    selectWidthFunction: (selectedWidth: string) => void;
+    selectLengthFunction: (selectedLength: string) => void;
+}
+
+
+const SizeSelectors: React.FC<SizeSelectorsProps> = ({selectWidthFunction, selectLengthFunction}) => {
+
+    const sizes: string[] = ['30', '32', '34']
+
+    return (
+        <>
+        <div className={`size-selector flex flex-row gap-5 absolute bottom-16`}>
+            {sizes.map((size, index) => {
+                return <div key={index} onClick={() => selectWidthFunction(size)}>{size}</div>
+            })
+            }
+        </div>
+        <div className={`size-selector flex flex-row gap-5 absolute bottom-5`}>
+            {sizes.map((size, index) => {
+                return <div key={index} onClick={() => selectLengthFunction(size)}>{size}</div>
+            })
+            }
+        </div>
+            </>
+    )
+}
+
+const Image = () => {
+    return (
+        <img src="" alt="" />
+    )
+}
+
+// data
 
 type TrouserFit = {
     fit: string;
@@ -69,7 +140,7 @@ type TrouserFit = {
 
 let slimFit: TrouserFit = {
     fit: "Slim",
-    description: "Slim description",
+    description: "The slim-fit trouser contours closely to the body, offering a sleek and modern silhouette.",
     images: {
         3232: "3232",
         3434: "3434",
@@ -79,7 +150,7 @@ let slimFit: TrouserFit = {
 
 let straightFit: TrouserFit = {
     fit: "Straight",
-    description: "Straight description",
+    description: "The straight-fit trouser offers a relaxed, uniform cut from hip to hem for a classic, comfortable look.",
     images: {
         3232: "3232",
         3434: "3434",
@@ -89,7 +160,7 @@ let straightFit: TrouserFit = {
 
 let regularFit: TrouserFit = {
     fit: "Regular",
-    description: "Regular description",
+    description: "The regular-fit trouser provides a comfortable, tailored cut with ample room for everyday wear.",
     images: {
         3232: "3232",
         3434: "3434",
@@ -97,6 +168,20 @@ let regularFit: TrouserFit = {
     }
 }
 
+let placeholder: TrouserFit = {
+    fit: "Select fit",
+    description: "",
+    images: {
+        1111:""
+    }
+}
+
 const trouserData = [slimFit, straightFit, regularFit]
+
+type Sizes = {
+    width: number;
+    length: number;
+    total: number;
+}
 
 export default TrousersMenu

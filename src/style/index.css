@@ -8,10 +8,23 @@ body {
 
 @layer components {
     .fit-dropdown.active {
-        display: none;
+        height: 72px;
+        transition: all 300ms ease-in-out;
     }
 
     .arrow-img.active {
         transform: rotate(180deg);
+    }
+
+    .menu-left {
+        flex: 0.5;
+    }
+
+    .menu-right {
+        flex: 1.5;
+    }
+
+    .trousers-menu {
+        max-width: 800px;
     }
 }
