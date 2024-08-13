@@ -2,29 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none;
+}
+
 body {
     background-color: #d9d9d9;
 }
 
 @layer components {
     .fit-dropdown.active {
-        height: 72px;
+        height: 78px;
         transition: all 300ms ease-in-out;
+        border-bottom: 2px solid black
+        
     }
 
     .arrow-img.active {
         transform: rotate(180deg);
+        
+    }
+
+    .selector-numbers.active {
+        width: 109px;
     }
 
     .menu-left {
-        flex: 0.5;
+        flex: 0.6;
     }
 
     .menu-right {
-        flex: 1.5;
+        flex: 1.4;
     }
 
     .trousers-menu {
-        max-width: 800px;
+        max-width: 925px;
+        height: 450px;
+    }
+
+    .fit-dropdown-text:first-of-type {
+        padding-top: 3px;
+    }
+
+    .fit-dropdown-text:last-of-type {
+        padding-bottom: 3px;
+    }
+
+    .trouser-menu-flex {
+        height: 450px
+    }
+
+    .home-buttons-container.hide {
+        display: none;
+    }
+
+    .back-button.hide {
+        display: block;
     }
 }
