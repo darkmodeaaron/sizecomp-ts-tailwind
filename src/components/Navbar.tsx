@@ -6,7 +6,6 @@ import downArrow from "../assets/downArrow.png"
 type NavbarProps = {
   propHomeState: boolean;
   toggleHomeStateFunction: () => void;
-
 }
 
 const Navbar: React.FC<NavbarProps> = ({propHomeState, toggleHomeStateFunction}) => {

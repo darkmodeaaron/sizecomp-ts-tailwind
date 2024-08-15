@@ -37,8 +37,8 @@ body {
         flex: 1.4;
     }
 
-    .trousers-menu {
-        max-width: 925px;
+    .trousers-menu-flex {
+        width: 925px;
         height: 450px;
     }
 
@@ -51,7 +51,9 @@ body {
     }
 
     .trouser-menu-flex {
-        height: 450px
+        height: 450px;
+        width: 950px;
+        
     }
 
     .home-buttons-container.hide {
@@ -60,5 +62,27 @@ body {
 
     .back-button.hide {
         display: block;
+    }
+
+    .trouser-menu-container {
+        display: flex;
+        min-width: 950px;
+    }
+
+    .trouser-menu-container.hide {
+        display: none;
+    }
+
+    .top-menu-flex {
+        height: 450px;
+        width: 950px;
+        
+    }
+    .top-menu-container {
+        display: flex;
+        min-width: 950px;
+    }
+    .top-menu-container.hide {
+        display: none;
     }
 }

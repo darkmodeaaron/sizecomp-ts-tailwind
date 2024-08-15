@@ -10,7 +10,12 @@ import slim3032 from '../assets/slim/sli3032.png'
 import straight3030 from '../assets/straight/str3030.png'
 import straight3032 from '../assets/straight/str3032.png'
 
-const TrousersMenu = () => {
+type TrousersMenuProps = {
+    propTrousersState: boolean;
+    
+}
+
+const TrousersMenu: React.FC<TrousersMenuProps> = ({propTrousersState}) => {
 
     const [selectedFitData, setSelectedData] = useState <TrouserFit> (placeholder)
     const [fitDropdownState, setFitDropdownState] = useState(false)
@@ -19,6 +24,15 @@ const TrousersMenu = () => {
     const [selectedSize, setSelectedSize] = useState(widthSelectedData + lengthSelectedData)
     const [widthDropdownState, setWidthDropdownState] = useState(false)
     const [lengthDropdownState, setLengthDropdownState] = useState(false)
+
+    useEffect(() => {
+        if (propTrousersState == false) {
+            setSelectedData(placeholder)
+            setWidthSelectedData("")
+            setLengthSelectedData("")
+            setSelectedImg("")
+        }
+    }, [propTrousersState])
     
 
     function toggleWidthDropdown() {
@@ -69,7 +83,7 @@ const TrousersMenu = () => {
     }    
 
     return (
-        <section className="hidden trouser-menu-container flex-row justify-center items-center absolute bottom-0 top-4 left-0 right-0 max-w-5xl mx-auto">
+        <section className={`flex w-96 trouser-menu-container flex-row justify-center items-center absolute bottom-0 top-4 left-0 right-0 max-w-5xl mx-auto ${propTrousersState ? "" : "hide"}`}>
             <div className="trouser-menu-flex flex flex-row">
                 <div className="menu-left border-2 border-blue-700 flex flex-col gap-12 relative px-2 py-5 h-full">
                     <SelectFitDropdown selectFitFunction={selectFit} fitDropdownToggleFunction={toggleFitDropdown} selectedData={selectedFitData} propFitDropdownState={fitDropdownState}/>
