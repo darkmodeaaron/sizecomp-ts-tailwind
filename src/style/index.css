@@ -85,4 +85,12 @@ body {
     .top-menu-container.hide {
         display: none;
     }
+    .select-fit-pointer {
+        top: 23px;
+        right: 10px;
+        transition: all 1000ms ease-in-out
+    }
+    .select-fit-pointer.active {
+        opacity: 1;
+    }
 }

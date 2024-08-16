@@ -18,12 +18,12 @@ function App() {
 
   function toggleHomeState() {
     setHomeState(!homeState)
-    
     if (trousersState) {
       setTrousersState(false)
-    }
-    if (topState) {
+    } else if (topState) {
       setTopState(false)
+      setJumperState(false)
+      setTshirtState(false)
     }
   }
 
@@ -31,14 +31,13 @@ function App() {
 
   function toggleTrousersState() {
     setTrousersState(!trousersState)
-    toggleHomeState()
+    setHomeState(false)
   }
 
   const [topState, setTopState] = useState(false)
 
   function toggleTopState() {
     setTopState(!topState)
-    toggleHomeState()
   }
 
   const [jumperState, setJumperState] = useState(false)
@@ -46,6 +45,7 @@ function App() {
   function toggleJumperState() {
     setJumperState(!jumperState)
     toggleTopState()
+    toggleHomeState()
   }
 
   const [tshirtState, setTshirtState] = useState(false)
@@ -53,6 +53,7 @@ function App() {
   function toggleTshirtState() {
     setTshirtState(!tshirtState)
     toggleTopState()
+    toggleHomeState()
   }
 
   return (

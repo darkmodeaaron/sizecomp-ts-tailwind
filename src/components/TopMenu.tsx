@@ -26,28 +26,39 @@ const TopMenu: React.FC<TopMenuProps> = ({propTopState, propJumperState, propTsh
     const [widthSelectedData, setWidthSelectedData] = useState("")
     const [widthDropdownState, setWidthDropdownState] = useState(false)
 
-
+    const [selectFitPointerState, setSelectFitPointerState] = useState(false)
     
     useEffect(() => {
-        if (propTopState == false) {
-            setSelectedItemsData(placeholderData)
-            setWidthSelectedData("")
-        }
-        if (propJumperState == true) {
+
+        if (propJumperState && propTopState == true) {
             setSelectedItemsData(jumperData)
+            console.log('jumper')
         }
-        if (propTshirtState == true) {
+        if (propTshirtState && propTopState == true) {
             setSelectedItemsData(tshirtData)
+            console.log('tsshirt')
+        }
+        if (propTopState == false && propJumperState == false && propTshirtState == false) {
+            setSelectedItemsData(placeholderData)
+            setSelectedFit(placeholder)
+            setWidthSelectedData("")
+            setFitDropdownState(false)
+            setWidthDropdownState(false)
         }
 
     }, [propTopState])
+
+
+
     
 
     function toggleWidthDropdown() {
+        if (selectedFit == placeholder) {
+            setSelectFitPointerState(true)
+            return
+        }
         setWidthDropdownState(!widthDropdownState)
     }
-
-
 
     // dropdown toggle function
     function toggleFitDropdown() {
@@ -60,12 +71,12 @@ const TopMenu: React.FC<TopMenuProps> = ({propTopState, propJumperState, propTsh
         } else {
             setSelectedFit(chosenFit)
             toggleFitDropdown()
+            setSelectFitPointerState(false)
         }
     }
 
     function selectWidth(selectedWidth: string) {
         setWidthSelectedData(selectedWidth)
-
         toggleWidthDropdown()
     }    
 
@@ -73,12 +84,16 @@ const TopMenu: React.FC<TopMenuProps> = ({propTopState, propJumperState, propTsh
     return (
         <section className={`flex w-96 top-menu-container flex-row justify-center items-center absolute bottom-0 top-4 left-0 right-0 max-w-5xl mx-auto ${propTopState ? "" : "hide"}`}>
             <div className="top-menu-flex flex flex-row">
-                <div className="menu-left border-2 border-blue-700 flex flex-col gap-12 relative px-2 py-5 h-full">
+                <div className="menu-left border-2 border-black flex flex-col gap-12 relative px-2 py-5 h-full">
                     <SelectFitDropdown selectFitFunction={selectFit} fitDropdownToggleFunction={toggleFitDropdown} propSelectedItemsData={selectedItemsData} propFitDropdownState={fitDropdownState} propSelectedFit={selectedFit} />
+                    <div className={`select-fit-pointer flex-row items-center justify-center gap-1 absolute opacity-0 flex ${selectFitPointerState ? 'active' : ''}`}>
+                        <div className="w-3 rotate-90"><img src={downArrow} alt="" /></div>
+                        <h1>Select a fit</h1>
+                    </div>
                     <FitDescription propSelectedFit={selectedFit}/>
                     <SizeSelectors selectWidthFunction={selectWidth} propWidthDropdownState={widthDropdownState}  toggleWidthDropdownFunction={toggleWidthDropdown}  propWidthSelectedData={widthSelectedData}/>
                 </div>
-                <div className="menu-right border-2 border-red-500 flex justify-center items-center h-full">
+                <div className="menu-right border-2 border-black flex justify-center items-center h-full">
                     <Image />
                 </div>
             </div>
@@ -137,14 +152,14 @@ type SizeSelectorsProps = {
 
 const SizeSelectors: React.FC<SizeSelectorsProps> = ({selectWidthFunction, propWidthDropdownState, toggleWidthDropdownFunction, propWidthSelectedData}) => {
 
-    enum Sizes { Small = 'S', Medium = 'M', Large = 'L'}
+    enum Sizes { Small = 'S', Medium = 'M', Large = 'L', Xlarge = 'XL'}
 
 
 
     return (
         <>
             <div className={`size-selector flex gap-5 flex-row absolute bottom-16 border-2 border-black px-1`}>
-                <div className="cursor-pointer" onClick={() => toggleWidthDropdownFunction()}>{propWidthSelectedData ? propWidthSelectedData + ' W' : "Select Width"}</div>
+                <div className="cursor-pointer" onClick={() => toggleWidthDropdownFunction()}>{propWidthSelectedData ? propWidthSelectedData : "Select Size"}</div>
                 <div className={`selector-numbers flex gap-5 w-0 overflow-hidden transitions-all duration-300 ease-in-out ${propWidthDropdownState ? 'active' : ''}`}>
                 {Object.values(Sizes).map((size, index) => {
                     return <div className="cursor-pointer font-extralight" key={index} onClick={() => selectWidthFunction(size)}>{size}</div>
@@ -177,8 +192,8 @@ type TopFit = {
 }
 
 let jumperSmallFit: TopFit = {
-    fit: "Small",
-    description: "Small Jumper",
+    fit: "Slim",
+    description: "A slim fit jumper is tailored to hug the body closely, offering a sleek, streamlined look with minimal excess fabric.",
     images: {
         3030: slim3030,
         3032: slim3032,
@@ -187,8 +202,8 @@ let jumperSmallFit: TopFit = {
 }
 
 let jumperMediumFit: TopFit = {
-    fit: "Medium",
-    description: "Medium Jumper",
+    fit: "Regular",
+    description: "A regular fit jumper offers a balanced, comfortable fit that follows the natural shape of the body without being too tight or too loose.",
     images: {
         3030: straight3030,
         3032: straight3032,
@@ -197,8 +212,8 @@ let jumperMediumFit: TopFit = {
 }
 
 let jumperLargeFit: TopFit = {
-    fit: "Large",
-    description: "Large Jumper",
+    fit: "Oversized",
+    description: "An oversized jumper offers a relaxed, loose fit with a cozy, slouchy silhouette that drapes comfortably over the body.",
     images: {
         3232: "3232",
         3434: "3434",
@@ -207,8 +222,8 @@ let jumperLargeFit: TopFit = {
 }
 
 let tshirtSmallFit: TopFit = {
-    fit: "Small",
-    description: "Small Tshirt",
+    fit: "Slim",
+    description: "A slim fit T-shirt is designed to contour to the body, providing a snug, flattering fit with a sleek and modern silhouette.",
     images: {
         3030: slim3030,
         3032: slim3032,
@@ -217,8 +232,8 @@ let tshirtSmallFit: TopFit = {
 }
 
 let tshirtMediumFit: TopFit = {
-    fit: "Medium",
-    description: "Medium Tshirt",
+    fit: "Regular",
+    description: "A regular fit T-shirt offers a comfortable, natural fit with a balanced cut that provides room through the chest and waist without being too tight or too loose.",
     images: {
         3030: straight3030,
         3032: straight3032,
@@ -227,8 +242,8 @@ let tshirtMediumFit: TopFit = {
 }
 
 let tshirtLargeFit: TopFit = {
-    fit: "Large",
-    description: "Large Tshirt",
+    fit: "Oversized",
+    description: "An oversized fit T-shirt features a loose, relaxed silhouette with extra room through the body and sleeves for a casual, laid-back look.",
     images: {
         3232: "3232",
         3434: "3434",

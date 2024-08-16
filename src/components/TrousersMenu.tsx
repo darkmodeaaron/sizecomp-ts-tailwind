@@ -25,21 +25,34 @@ const TrousersMenu: React.FC<TrousersMenuProps> = ({propTrousersState}) => {
     const [widthDropdownState, setWidthDropdownState] = useState(false)
     const [lengthDropdownState, setLengthDropdownState] = useState(false)
 
+
+    const [selectFitPointerState, setSelectFitPointerState] = useState(false)
+
     useEffect(() => {
         if (propTrousersState == false) {
             setSelectedData(placeholder)
             setWidthSelectedData("")
             setLengthSelectedData("")
             setSelectedImg("")
+            setWidthDropdownState(false)
+            setFitDropdownState(false)
+            setLengthDropdownState(false)
         }
     }, [propTrousersState])
     
 
     function toggleWidthDropdown() {
+        if (selectedFitData == placeholder) {
+            setSelectFitPointerState(true)
+            return
+        }
         setWidthDropdownState(!widthDropdownState)
     }
 
     function toggleLengthDropdown() {
+        if (selectedFitData == placeholder) {
+            return
+        }
         setLengthDropdownState(!lengthDropdownState)
     }
 
@@ -60,6 +73,7 @@ const TrousersMenu: React.FC<TrousersMenuProps> = ({propTrousersState}) => {
         } else {
             setSelectedData(chosenFit)
             toggleFitDropdown()
+            setSelectFitPointerState(false)
         }
     }
 
@@ -85,12 +99,16 @@ const TrousersMenu: React.FC<TrousersMenuProps> = ({propTrousersState}) => {
     return (
         <section className={`flex w-96 trouser-menu-container flex-row justify-center items-center absolute bottom-0 top-4 left-0 right-0 max-w-5xl mx-auto ${propTrousersState ? "" : "hide"}`}>
             <div className="trouser-menu-flex flex flex-row">
-                <div className="menu-left border-2 border-blue-700 flex flex-col gap-12 relative px-2 py-5 h-full">
+                <div className="menu-left border-2 border-black flex flex-col gap-12 relative px-2 py-5 h-full">
                     <SelectFitDropdown selectFitFunction={selectFit} fitDropdownToggleFunction={toggleFitDropdown} selectedData={selectedFitData} propFitDropdownState={fitDropdownState}/>
+                    <div className={`select-fit-pointer flex-row items-center justify-center gap-1 absolute opacity-0 flex ${selectFitPointerState ? 'active' : ''}`}>
+                        <div className="w-3 rotate-90"><img src={downArrow} alt="" /></div>
+                        <h1>Select a fit</h1>
+                    </div>
                     <FitDescription propSelectedFitData={selectedFitData}/>
                     <SizeSelectors selectWidthFunction={selectWidth} selectLengthFunction={selectLength} propWidthDropdownState={widthDropdownState} propLengthDropdownState={lengthDropdownState} toggleWidthDropdownFunction={toggleWidthDropdown} toggleLengthDropdownFunction={toggleLengthDropdown} propLengthSelectedData={lengthSelectedData} propWidthSelectedData={widthSelectedData}/>
                 </div>
-                <div className="menu-right border-2 border-red-500 flex justify-center items-center h-full">
+                <div className="menu-right border-2 border-black flex justify-center items-center h-full">
                     <Image str={selectedImg}/>
                 </div>
             </div>
