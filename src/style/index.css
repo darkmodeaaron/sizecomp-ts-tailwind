@@ -20,6 +20,10 @@ body {
         
     }
 
+    .select-numbers {
+        will-change: width;
+    }
+
     .arrow-img.active {
         transform: rotate(180deg);
         
@@ -27,6 +31,10 @@ body {
 
     .selector-numbers.active {
         width: 109px;
+    }
+
+    .selector-letters.active {
+        width: 80px;
     }
 
     .menu-left {
@@ -92,5 +100,13 @@ body {
     }
     .select-fit-pointer.active {
         opacity: 1;
+    }
+    .box-img {
+        width: 550px;
+        transition: all 1000ms ease-in-out;
+        opacity: 1;
+    }
+    .box-img.active {
+        opacity: 0;
     }
 }

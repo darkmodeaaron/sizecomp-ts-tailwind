@@ -3,14 +3,36 @@ import React from 'react'
 import { useEffect, useState } from "react"
 
 import downArrow from "../assets/downArrow.png"
+import downArrowRed from "../assets/downArrowRed.png"
 
 import "../style/index.css"
 
-import slim3030 from '../assets/slim/sli3030.png'
-import slim3032 from '../assets/slim/sli3032.png'
+import slims from '../assets/jumpers/slim/slims.png'
+import slimm from '../assets/jumpers/slim/slimm.png'
+import sliml from '../assets/jumpers/slim/sliml.png'
 
-import straight3030 from '../assets/straight/str3030.png'
-import straight3032 from '../assets/straight/str3032.png'
+import regulars from '../assets/jumpers/regular/regulars.png'
+import regularm from '../assets/jumpers/regular/regularm.png'
+import regularl from '../assets/jumpers/regular/regularl.png'
+
+import oversizeds from '../assets/jumpers/oversized/oversizeds.png'
+import oversizedm from '../assets/jumpers/oversized/oversizedm.png'
+import oversizedl from '../assets/jumpers/oversized/oversizedl.png'
+
+import tslims from '../assets/tees/tslims.png'
+import tslimm from '../assets/tees/tslimm.png'
+import tsliml from '../assets/tees/tsliml.png'
+
+import tregulars from '../assets/tees/tregulars.png'
+import tregularm from '../assets/tees/tregularm.png'
+import tregularl from '../assets/tees/tregularl.png'
+
+import toversizeds from '../assets/tees/toversizeds.png'
+import toversizedm from '../assets/tees/toversizedm.png'
+import toversizedl from '../assets/tees/toversizedl.png'
+
+
+
 
 type TopMenuProps = {
     propTopState: boolean;
@@ -27,6 +49,8 @@ const TopMenu: React.FC<TopMenuProps> = ({propTopState, propJumperState, propTsh
     const [widthDropdownState, setWidthDropdownState] = useState(false)
 
     const [selectFitPointerState, setSelectFitPointerState] = useState(false)
+
+    const[selectedImg, setSelectedImg] = useState(selectedFit.images[0])
     
     useEffect(() => {
 
@@ -44,13 +68,22 @@ const TopMenu: React.FC<TopMenuProps> = ({propTopState, propJumperState, propTsh
             setWidthSelectedData("")
             setFitDropdownState(false)
             setWidthDropdownState(false)
+            setSelectedImg('')
         }
 
     }, [propTopState])
 
-
-
-    
+    useEffect(() => {
+        setTimeout(() => {
+            if (widthSelectedData == 'S') {
+                setSelectedImg(selectedFit.images[1])
+            } else if (widthSelectedData == 'M') {
+                setSelectedImg(selectedFit.images[2])
+            } else if (widthSelectedData == 'L') {
+                setSelectedImg(selectedFit.images[3])
+            }
+        }, 1600)
+    }, [selectedImg, selectedFit, widthSelectedData])
 
     function toggleWidthDropdown() {
         if (selectedFit == placeholder) {
@@ -72,29 +105,46 @@ const TopMenu: React.FC<TopMenuProps> = ({propTopState, propJumperState, propTsh
             setSelectedFit(chosenFit)
             toggleFitDropdown()
             setSelectFitPointerState(false)
+            toggleImageVis()
         }
     }
 
     function selectWidth(selectedWidth: string) {
+        if (selectedWidth == widthSelectedData) {
+            return
+        } else 
+        
+        toggleImageVis()
         setWidthSelectedData(selectedWidth)
         toggleWidthDropdown()
+        
     }    
+
+    const [imageVis, setImageVis] = useState(true)
+
+    function toggleImageVis() {
+        setImageVis(false)
+        setTimeout(() => {
+            setImageVis(true)
+        }, 1500)
+    }
+
 
 
     return (
         <section className={`flex w-96 top-menu-container flex-row justify-center items-center absolute bottom-0 top-4 left-0 right-0 max-w-5xl mx-auto ${propTopState ? "" : "hide"}`}>
-            <div className="top-menu-flex flex flex-row">
+            <div className="top-menu-flex flex flex-row gap-1">
                 <div className="menu-left border-2 border-black flex flex-col gap-12 relative px-2 py-5 h-full">
                     <SelectFitDropdown selectFitFunction={selectFit} fitDropdownToggleFunction={toggleFitDropdown} propSelectedItemsData={selectedItemsData} propFitDropdownState={fitDropdownState} propSelectedFit={selectedFit} />
                     <div className={`select-fit-pointer flex-row items-center justify-center gap-1 absolute opacity-0 flex ${selectFitPointerState ? 'active' : ''}`}>
-                        <div className="w-3 rotate-90"><img src={downArrow} alt="" /></div>
+                        <div className="w-3 rotate-90"><img src={downArrowRed} alt="" /></div>
                         <h1>Select a fit</h1>
                     </div>
                     <FitDescription propSelectedFit={selectedFit}/>
                     <SizeSelectors selectWidthFunction={selectWidth} propWidthDropdownState={widthDropdownState}  toggleWidthDropdownFunction={toggleWidthDropdown}  propWidthSelectedData={widthSelectedData}/>
                 </div>
                 <div className="menu-right border-2 border-black flex justify-center items-center h-full">
-                    <Image />
+                    <Image propSrc={selectedImg} propImageVis={imageVis}/>
                 </div>
             </div>
         </section>
@@ -152,7 +202,9 @@ type SizeSelectorsProps = {
 
 const SizeSelectors: React.FC<SizeSelectorsProps> = ({selectWidthFunction, propWidthDropdownState, toggleWidthDropdownFunction, propWidthSelectedData}) => {
 
-    enum Sizes { Small = 'S', Medium = 'M', Large = 'L', Xlarge = 'XL'}
+    const Sizes = ['S', 'M', 'L']
+
+
 
 
 
@@ -160,7 +212,7 @@ const SizeSelectors: React.FC<SizeSelectorsProps> = ({selectWidthFunction, propW
         <>
             <div className={`size-selector flex gap-5 flex-row absolute bottom-16 border-2 border-black px-1`}>
                 <div className="cursor-pointer" onClick={() => toggleWidthDropdownFunction()}>{propWidthSelectedData ? propWidthSelectedData : "Select Size"}</div>
-                <div className={`selector-numbers flex gap-5 w-0 overflow-hidden transitions-all duration-300 ease-in-out ${propWidthDropdownState ? 'active' : ''}`}>
+                <div className={`selector-letters flex gap-5 w-0 overflow-hidden transitions-all duration-300 ease-in-out ${propWidthDropdownState ? 'active' : ''}`}>
                 {Object.values(Sizes).map((size, index) => {
                     return <div className="cursor-pointer font-extralight" key={index} onClick={() => selectWidthFunction(size)}>{size}</div>
                 })}
@@ -174,12 +226,13 @@ const SizeSelectors: React.FC<SizeSelectorsProps> = ({selectWidthFunction, propW
 }
 
 type ImageProps = {
-    
+    propSrc: string;
+    propImageVis: boolean;
 }
 
-const Image: React.FC<ImageProps> = () => {
+const Image: React.FC<ImageProps> = ({propSrc, propImageVis}) => {
     return (
-        <img className="box-img w-64" src="" alt="" />
+        <img className={`box-img ${propImageVis ? '' : 'active'}`} src={propSrc} alt="" />
     )
 }
 
@@ -195,9 +248,9 @@ let jumperSmallFit: TopFit = {
     fit: "Slim",
     description: "A slim fit jumper is tailored to hug the body closely, offering a sleek, streamlined look with minimal excess fabric.",
     images: {
-        3030: slim3030,
-        3032: slim3032,
-        3034: "3636"
+        1: slims,
+        2: slimm,
+        3: sliml
     }
 }
 
@@ -205,9 +258,9 @@ let jumperMediumFit: TopFit = {
     fit: "Regular",
     description: "A regular fit jumper offers a balanced, comfortable fit that follows the natural shape of the body without being too tight or too loose.",
     images: {
-        3030: straight3030,
-        3032: straight3032,
-        3636: "3636"
+        1: regulars,
+        2: regularm,
+        3: regularl
     }
 }
 
@@ -215,9 +268,9 @@ let jumperLargeFit: TopFit = {
     fit: "Oversized",
     description: "An oversized jumper offers a relaxed, loose fit with a cozy, slouchy silhouette that drapes comfortably over the body.",
     images: {
-        3232: "3232",
-        3434: "3434",
-        3636: "3636"
+        1: oversizeds,
+        2: oversizedm,
+        3: oversizedl
     }
 }
 
@@ -225,9 +278,9 @@ let tshirtSmallFit: TopFit = {
     fit: "Slim",
     description: "A slim fit T-shirt is designed to contour to the body, providing a snug, flattering fit with a sleek and modern silhouette.",
     images: {
-        3030: slim3030,
-        3032: slim3032,
-        3034: "3636"
+        1: tslims,
+        2: tslimm,
+        3: tsliml
     }
 }
 
@@ -235,9 +288,9 @@ let tshirtMediumFit: TopFit = {
     fit: "Regular",
     description: "A regular fit T-shirt offers a comfortable, natural fit with a balanced cut that provides room through the chest and waist without being too tight or too loose.",
     images: {
-        3030: straight3030,
-        3032: straight3032,
-        3636: "3636"
+        1: tregulars,
+        2: tregularm,
+        3: tregularl
     }
 }
 
@@ -245,9 +298,9 @@ let tshirtLargeFit: TopFit = {
     fit: "Oversized",
     description: "An oversized fit T-shirt features a loose, relaxed silhouette with extra room through the body and sleeves for a casual, laid-back look.",
     images: {
-        3232: "3232",
-        3434: "3434",
-        3636: "3636"
+        1: toversizeds,
+        2: toversizedm,
+        3: toversizedl
     }
 }
 
